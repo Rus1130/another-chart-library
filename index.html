@@ -1,0 +1,21 @@
+<style>
+    div {
+        display: inline-block;
+        border: 1px solid black;
+    }
+</style>
+<head>
+    <div id="chart"></div>
+</head>
+<body>
+
+</body>
+<script type="module">
+    import {Chart} from './acl.js'
+
+    const chartElement = document.getElementById('chart')
+    let chart = new Chart('bar')
+        .appendTo(chartElement)
+        .setData(["time", "population", [1, 2, 3, 4, 5,], [10, 15, 21, 6, 2]])
+
+</script>
