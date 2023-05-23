@@ -6,6 +6,7 @@ import { SVG, extend as SVGextend, Element as SVGElement, PathArray } from 'http
  */
 /**
  * @class BarChart
+ * @param {string} chartTitle the title of the chart
  * @param {string} xAxisLabel the label for the x axis
  * @param {string} yAxisLabel the label for the y axis
  * @param {number} yMin the minimum value for the y axis
@@ -13,15 +14,16 @@ import { SVG, extend as SVGextend, Element as SVGElement, PathArray } from 'http
  * @param {number} yStep the step value for the y axis
  * @param {string[]|number[]} xAxisData the data for the x axis
  * @param {string[]|number[]} yAxisData the data for the y axis
+ * @param {string} [barColor] the color of the bars
  * @description Parameters for <code>.setData()</code> when the chart type is bar
 */
 class BarChart {
-    constructor(xAxisLabel, yAxisLabel, yMin, yMax, yStep, xAxisData, yAxisData, options) {
+    constructor(chartTitle, xAxisLabel, yAxisLabel, yMin, yMax, yStep, xAxisData, yAxisData, options, barColor) {
         let draw = options.draw
 
-        if(xAxisData.length !== yAxisData.length) throw new Error('xAxis and yAxis data must be the same length')
+        barColor = barColor || '#4285f4';
 
-        // put a label between xAxisLine2 and the bottom of the chart
+        if(xAxisData.length !== yAxisData.length) throw new Error('xAxis and yAxis data must be the same length')
 
         let xLine = Chart.measureLines.xAxisLine;
         let yLine = Chart.measureLines.yAxisLine;
@@ -34,35 +36,40 @@ class BarChart {
         .cy(options.height - (options.height - xLine.attr('y1')) / 2)
 
         let yLabel = draw.text(yAxisLabel).font({ family: 'Helvetica', size: 16 })
-        .cx(yLine.attr('x2') / 2)
+        .cx(yLine.attr('x2') / 2 - yLine.attr('x1') / 4)
         .cy(yCenter.attr('y1'))
         .rotate(-90)
 
         let yMeasureStep = (yLine.attr('y1') - (yLine.attr('y2')  - (yLine.attr('y2') / Chart.precision))) / yMax;
 
-        function drawBar(height, x, width, barLabel){
+        function drawBar(height, x, width, barLabel) {
             let rect = draw.rect(width, -yMeasureStep * height)
             .x(yLine.attr('x1') + x)
             .y(xLine.attr('y1') + yMeasureStep * height)
+
+            rect.attr('fill', barColor)
 
             let text = draw.text(barLabel).font({ family: 'Helvetica', size: 16 })
             .cx(rect.attr('x') + rect.attr('width') / 2)
             .cy(xLine.attr('y1') + 10)
         }
 
-        function render(){
+        Chart.drawMeasureLines(yMin, yMax, yStep);
 
-            Chart.drawMeasureLines(yMin, yMax, yStep);
+        let barPositionStep = (yCenter.attr('x2') - yCenter.attr('x1')) / xAxisData.length
 
-            let barPositionStep = (yCenter.attr('x2') - yCenter.attr('x1')) / xAxisData.length
-
-            for(let i = 0; i < xAxisData.length; i++){
-                drawBar(yAxisData[i], barPositionStep * i + 15, barPositionStep - 15, xAxisData[i])
-            }
-
+        for(let i = 0; i < xAxisData.length; i++){
+            drawBar(yAxisData[i], barPositionStep * i + 15, barPositionStep - 15, xAxisData[i])
         }
 
-        render()
+        var title = draw.text(function(add) {
+            add.tspan(chartTitle).fill('#8e8e8e')
+        })
+        .cy(25)
+        .font({ family: 'Helvetica', size: 20 })
+
+        title.cx(xCenter.attr('x1'))
+
     }
 }
 
@@ -77,15 +84,49 @@ data cheme: ...{arcLength: number, color: string, label: string}[]
 /**
  * @class PieChart
  * @param {object[]} data the data for the pie chart
- * @param {number} data[].arc the length of the arc
+ * @param {number} data[].arc the length of the arc (in percent)
  * @param {string} data[].color the color of the arc
  * @param {string} data[].label the label for the arc
  */
 class PieChart {
     constructor(data, options) {
+        function getD(radius, startAngle, endAngle) {
+            const isCircle = endAngle - startAngle === 360;
+            if (isCircle) {
+                endAngle--;
+            }
+            const start = polarToCartesian(radius, startAngle);
+            const end = polarToCartesian(radius, endAngle);
+            const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+            const d = [
+                "M", start.x, start.y,
+                "A", radius, radius, 0, largeArcFlag, 1, end.x, end.y
+            ];
+
+            if (isCircle) {
+                d.push("Z");
+            } else {
+                d.push("L", radius, radius, "L", start.x, start.y, "Z");
+            }
+            return d.join(" ");
+        }
+
+        function polarToCartesian(radius, angleInDegrees) {
+            var radians = (angleInDegrees - 90) * Math.PI / 180;
+            return {
+                x: radius + (radius * Math.cos(radians)),
+                y: radius + (radius * Math.sin(radians))
+            };
+        }
+
         let draw = Chart.options.draw
         this.data = data;
 
+
+        // sort the array so that the largest arc is first
+        this.data.sort((a, b) => {
+            return b.arc - a.arc;
+        })
 
         let circle = Chart.measureLines.circle;
         let arcs = [];
@@ -93,26 +134,35 @@ class PieChart {
         let labels = [];
 
         for(let i = 0; i < data.length; i++){
-            arcs.push(data[i].arc);
+            arcs.push(data[i].arc * 3.6);
             colors.push(data[i].color);
             labels.push(data[i].label);
         }
 
-        let previousArc = 0;
-
+        let arcList = []
         for(let i = 0; i < arcs.length; i++){
+            let startingAngle = 0;
+            for(let j = 0; j < i; j++){
+                startingAngle += arcs[j];
+            }
+            
+            let endAngle = startingAngle + arcs[i];
 
-            let startingLine = draw.line(circle.cx(), circle.cy(), circle.cx() + circle.radius(), circle.cy())
-            .stroke({ width: 1, color: '#000' })
-            
-            let endingLine = draw.line(circle.cx(), circle.cy(), circle.cx() + circle.radius(), circle.cy())
-            .stroke({ width: 1, color: '#000' })
-            endingLine.rotate(arcs[i], circle.cx(), circle.cy())
-            
+            let arc = draw.path(getD(circle.attr('r'), startingAngle, endAngle)).fill(colors[i])
+            .dx(circle.attr('cx') - circle.attr('r'))
+            .dy(circle.attr('cy') - circle.attr('r'))
+
+            arc.stroke({ width: 7, color: '#fff' });
+            arc.on('mouseover', () => {
+                arc.front();
+                arc.stroke('none');
+
+            })
+
+            arc.on('mouseout', () => {
+                arc.stroke({ width: 7, color: '#fff' });
+            })
         }
-        
-        console.log(arcs, colors, labels)
-        
     }
 }
 
@@ -134,17 +184,15 @@ export class Chart {
         let yLine = Chart.measureLines.yAxisLine;
 
         let draw = Chart.options.draw;
-        let yMeasureLines = [];
         let yMeasureStep = (yLine.attr('y1') - (yLine.attr('y2')  - (yLine.attr('y2') / Chart.precision))) / max;
-        for(let i = min; i <= max; i += 1) {
-            let yMeasureLine = draw.line(yLine.attr('x1') - 10, xLine.attr('y1') + yMeasureStep * i, yLine.attr('x1') + 10, xLine.attr('y2') + yMeasureStep * i)
-            .stroke('none')
+        for(let i = min; i <= max; i += step) {
+            let measureLine = draw.line(yLine.attr('x1') - 5, xLine.attr('y1') + yMeasureStep * i, yLine.attr('x1') + 5, xLine.attr('y2') + yMeasureStep * i)
+            .stroke({ width: 1, color: '#000' })
 
-            yMeasureLine.attr('id', 'yMeasureLine' + i)
+            let text = draw.text(i).font({ family: 'Helvetica', size: 10 })
 
-            if(i % step == 0) yMeasureLine.stroke({ width: 1, color: '#000' });
-
-            yMeasureLines.push(yMeasureLine);
+            text.x(measureLine.attr('x1') - text.bbox().width - 2)
+            .cy(xLine.attr('y1') + yMeasureStep * i)
         }
     }
 
@@ -210,7 +258,6 @@ export class Chart {
             .cx(options.width / 2)
             .cy(options.height / 2)
             .fill('none')
-            .stroke({ width: 1, color: '#fff' });
 
             Chart.measureLines = {
                 xCenterLine: xCenterLine,
@@ -230,14 +277,16 @@ export class Chart {
      */
     setData(args) {
         if(this.type == 'bar') {
-            let xAxisLabel = arguments[0];
-            let yAxisLabel = arguments[1];
-            let yMin = arguments[2];
-            let yMax = arguments[3];
-            let yStep = arguments[4];
-            let xAxisData = arguments[5];
-            let yAxisData = arguments[6];
-            let chart = new classes[this.type](xAxisLabel, yAxisLabel, yMin, yMax, yStep, xAxisData, yAxisData, Chart.options);
+            let chartTitle = arguments[0];
+            let xAxisLabel = arguments[1];
+            let yAxisLabel = arguments[2];
+            let yMin = arguments[3];
+            let yMax = arguments[4];
+            let yStep = arguments[5];
+            let xAxisData = arguments[6];
+            let yAxisData = arguments[7];
+            let barColor = arguments[8];
+            let chart = new classes[this.type](chartTitle, xAxisLabel, yAxisLabel, yMin, yMax, yStep, xAxisData, yAxisData, Chart.options, barColor);
         }
 
         if(this.type == 'pie') {
@@ -253,11 +302,5 @@ const classes = {
     'pie': PieChart,
 }
 
-let chart = new Chart('pie').appendTo('#chart', { width: 500, height: 500 });
-chart.setData([
-    { arc: 100, color: '#f00', label: 'Red' },
-    //{ arc: 100, color: '#0f0', label: 'Green' },
-    //{ arc: 80, color: '#00f', label: 'Blue' },
-    //{ arc: 60, color: '#ff0', label: 'Yellow' }
-])
+
 

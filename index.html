@@ -5,21 +5,30 @@
     }
 </style>
 <head>
-    <div id="chart"></div>
+    <div id="bar"></div>
+    <div id="pie"></div>
 </head>
 <body>
 
 </body>
 <script type="module">
-    import { Chart } from './acl.js'
+    import { Chart } from './main.js'
 
-    // const chartElement = document.getElementById('chart')
-    // let chart = new Chart('bar')
-    //     .appendTo(chartElement)
-    //     .setData("year", "population", 1, 25, 2, 
-    //         [6,7,8,9,10],
-    //         [1,2,3,4,5]
-    //     )
+    let bar = new Chart('bar')
+        .appendTo("#bar")
+        .setData("Motor Vehicle Deaths by Month (2021)", "Month", "Deaths", 500, 8000, 1000, 
+            ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            [3099, 2561, 3214, 3557, 3768, 3789, 3879, 4013, 3861, 4101, 3599, 3498])
+
+    let chart = new Chart('pie')
+    .appendTo('#pie')
+    .setData([
+        { arc: 40, color: '#f00', label: 'Red' },
+        { arc: 30, color: '#0f0', label: 'Green' },
+        { arc: 20, color: '#00f', label: 'Blue' },
+        { arc: 7, color: '#ff0', label: 'Yellow' },
+        { arc: 3, color: '#0ff', label: 'Cyan' },
+    ])
 
         
 
