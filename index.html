@@ -5,8 +5,8 @@
     }
 </style>
 <head>
-    <div id="bar"></div>
-    <div id="pie"></div>
+    <div id="bar-chart"></div>
+    <div id="pie-chart"></div>
 </head>
 <body>
 
@@ -15,21 +15,23 @@
     import { Chart } from './main.js'
 
     let bar = new Chart('bar')
-        .appendTo("#bar")
-        .setData("Motor Vehicle Deaths by Month (2021)", "Month", "Deaths", 500, 8000, 1000, 
-            ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            [3099, 2561, 3214, 3557, 3768, 3789, 3879, 4013, 3861, 4101, 3599, 3498])
+    .appendTo("#bar-chart")
+    .setData("Motor Vehicle Deaths by Month (2021)", "Month", "Deaths", 500, 8000, 1000, 
+        ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        [3099, 2561, 3214, 3557, 3768, 3789, 3879, 4013, 3861, 4101, 3599, 3498]
+    )
 
     let chart = new Chart('pie')
-    .appendTo('#pie')
-    .setData([
-        { arc: 40, color: '#f00', label: 'Red' },
-        { arc: 30, color: '#0f0', label: 'Green' },
-        { arc: 20, color: '#00f', label: 'Blue' },
-        { arc: 7, color: '#ff0', label: 'Yellow' },
-        { arc: 3, color: '#0ff', label: 'Cyan' },
-    ])
-
+    .appendTo('#pie-chart')
+    .setData("Favorite Color", [
+        { arc: 42, color: 'blue', label: 'Blue' },
+        { arc: 14, color: 'green', label: 'Green' },
+        { arc: 14, color: 'purple', label: 'Purple' },
+        { arc: 8, color: 'red', label: "Red"},
+        { arc: 7, color: 'black', label: "Black"},
+        { arc: 5, color: 'orange', label: 'Orange'},
+        { arc: 10, color: 'grey', label: "Other"},
+    ], 2, true)
         
 
 </script>
