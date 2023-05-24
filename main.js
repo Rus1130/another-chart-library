@@ -54,9 +54,19 @@ class BarChart {
             rect.attr('fill', barColor)
 
             // Label Text
-            draw.text(barLabel).font({ family: 'Helvetica', size: 16 })
+            draw.text(barLabel).font({ family: 'Helvetica', size: 12 })
             .cx(rect.attr('x') + rect.attr('width') / 2)
             .cy(xLine.attr('y1') + 10)
+
+            // when hovered over for 1 second, show the value
+            rect.mouseover(function() {
+                let text = draw.text(height).font({ family: 'Helvetica', size: 12 })
+                .cx(rect.attr('x') + rect.attr('width') / 2)
+                .cy(rect.attr('y') - 10)
+                setTimeout(() => {
+                    text.remove()
+                }, 1000)
+            })
         }
 
         Chart.drawMeasureLines(yMin, yMax, yStep);
@@ -71,7 +81,7 @@ class BarChart {
             add.tspan(chartTitle).fill('#8e8e8e')
         })
         .y(10)
-        .font({ family: 'Helvetica', size: 20 })
+        .font({ family: 'Helvetica', size: options.height / 20  })
 
         title.cx(xCenter.attr('x1'))
 
@@ -179,16 +189,23 @@ class PieChart {
             arc.stroke({ width: popout, color: '#fff' });
             arc.on('mouseover', () => {
                 if(popout == 0) return;
-                arc.front();
-                labelElements[i].front();
+                for(let i = 0; i < arcList.length; i++){
+                    if(arcList[i] == arc){
+                        arcList[i].front();
+                    } else {
+                        arcList[i].back();
+                    }
+                }
+
                 arc.stroke('none');
+
 
             })
 
             arc.on('mouseout', () => {
                 if(popout == 0) return;
-                arc.backward();
                 arc.stroke({ width: popout, color: '#fff' });
+                arc.back()
             })
 
             arcList.push(arc);
@@ -327,7 +344,6 @@ export class Chart {
     /**
      * @method setData
      * @memberof Chart
-     * @description set the data for the chart
      * @param {object} args the arguments for the data
      * @description the arguments for the data, depending on the type of chart
      */
