@@ -5,9 +5,9 @@
     }
 </style>
 <head>
-    <div id="line-chart"></div>
     <div id="bar-chart"></div>
     <div id="pie-chart"></div>
+    <div id="line-chart"></div>
 </head>
 <body>
 
@@ -17,12 +17,12 @@
 
     let bar = new Chart('bar')
     .appendTo("#bar-chart")
-    .setData("Motor Vehicle Deaths by Month (2021)", "Month", "Deaths", 500, 8000, 1000, 
+    .setData("Motor Vehicle Deaths by Month (2021)", "Month", "Deaths", 1000, 
         ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         [3099, 2561, 3214, 3557, 3768, 3789, 3879, 4013, 3861, 4101, 3599, 3498]
     )
 
-    let chart = new Chart('pie')
+    let pie = new Chart('pie')
     .appendTo('#pie-chart')
     .setData("Favorite Color", [
         { arc: 42, color: 'blue', label: 'Blue' },
@@ -33,6 +33,39 @@
         { arc: 5, color: 'orange', label: 'Orange'},
         { arc: 10, color: 'grey', label: "Other"},
     ], 4, true)
+
+    let line = new Chart('line')
+    .appendTo('#line-chart')
+    .setData("Population of Different Countries", 'Year', 'Population (Millions)', 20, 2, [
+        {
+            color: 'red',
+            label: 'USA',
+            pointRadius: 3,
+            points: [
+                [2000, 282.3],
+                [2001, 285.4],
+                [2002, 288.3],
+                [2003, 291.1],
+                [2004, 293.9],
+                [2005, 296.8],
+                [2006, 299.7],
+                [2007, 302.7],
+                [2008, 305.6],
+                [2009, 308.5],
+                [2010, 311.1],
+                [2011, 313.8],
+                [2012, 316.6],
+                // [2013, 319.3],
+                // [2014, 322],
+                // [2015, 324.6],
+                // [2016, 327.2],
+                // [2017, 329.7],
+                // [2018, 332.1],
+                // [2019, 334.3],
+                // [2020, 335.9]
+            ],
+        }
+    ])
         
 
 </script>
