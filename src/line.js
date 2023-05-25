@@ -12,9 +12,9 @@ import { PathArray } from 'https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/s
  * @param {object[]}          data       the data for the line chart
  * @description Has trouble with extremely small numbers (<0)
  * @example
-    let line = new Chart('line')
+let line = new Chart('line')
     .appendTo('#line-chart')
-    .setData("Average Stock Prices (2000 - 2022)", 'Year', 'Price', 2, 2, 4, 2, [
+    .setData("Average Stock Prices (2000 - 2022)", 'Year', 'Price', 10, [
         {
             color: 'red',
             label: 'Apple',
@@ -43,6 +43,35 @@ import { PathArray } from 'https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/s
                 [2020, 93.6424],
                 [2021, 139.3947],
                 [2022, 153.9328],
+            ],
+        }, {
+            color: 'blue',
+            label: 'Microsoft',
+            pointRadius: 3,
+            points: [
+                [2000, 23.8554],
+                [2001, 19.5747],
+                [2002, 17.0729],
+                [2003, 16.4050],
+                [2004, 17.3987],
+                [2005, 18.3417],
+                [2006, 18.8863],
+                [2007, 22.1793],
+                [2008, 19.6798],
+                [2009, 17.3973],
+                [2010, 20.8738],
+                [2011, 20.5793],
+                [2012, 24.2010],
+                [2013, 27.1941],
+                [2014, 36.5584],
+                [2015, 41.2965],
+                [2016, 50.1958],
+                [2017, 67.0252],
+                [2018, 95.8759],
+                [2019, 125.5735],
+                [2020, 187.8096],
+                [2021, 271.0883],
+                [2022, 266.2800],
             ],
         }
     ])
