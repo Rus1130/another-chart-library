@@ -27,6 +27,7 @@ export class PieChart {
         popout = popout || 0;
         showPercentages = showPercentages || false;
 
+        
 
         function getD(radius, startAngle, endAngle) {
             const isCircle = endAngle - startAngle === 360;
@@ -59,6 +60,8 @@ export class PieChart {
 
         let draw = Chart.options.draw
         this.data = data;
+
+        
 
         let title = draw.text(function(add) {
             add.tspan(chartTitle).fill('#8e8e8e')
@@ -94,31 +97,15 @@ export class PieChart {
             
             let endAngle = startingAngle + arcs[i];
 
+
+            // get the point that is parallel to the center of the circle and the end of the arc
+            
+
             let arc = draw.path(getD(circle.attr('r'), startingAngle, endAngle)).fill(colors[i])
             .dx(circle.attr('cx') - circle.attr('r'))
             .dy(circle.attr('cy') - circle.attr('r'))
+            .stroke({ width: 1, color: '#fff' })
 
-            arc.stroke({ width: popout, color: '#fff' });
-            arc.on('mouseover', () => {
-                if(popout == 0) return;
-                for(let i = 0; i < arcList.length; i++){
-                    if(arcList[i] == arc){
-                        arcList[i].front();
-                    } else {
-                        arcList[i].back();
-                    }
-                }
-
-                arc.stroke('none');
-
-
-            })
-
-            arc.on('mouseout', () => {
-                if(popout == 0) return;
-                arc.stroke({ width: popout, color: '#fff' });
-                arc.back()
-            })
 
             arcList.push(arc);
         }
@@ -137,13 +124,49 @@ export class PieChart {
 
             angle += arcs[i] / 2;
 
-
             let text = draw.text(label).font({ family: 'Helvetica', size: 12 })
             .cx(circle.attr('cx'))
             .cy(circle.attr('cy')/2 - 35)
 
             text.rotate(angle, circle.attr('cx'), circle.attr('cy'))
             text.rotate(-angle)
+
+            arcList[i].remember('originalX', arcList[i].x())
+            arcList[i].remember('originalY', arcList[i].y())
+
+            text.remember('originalX', text.x())
+            text.remember('originalY', text.y())
+
+
+            arcList[i].on('mouseenter', function() {
+                arcList[i].animate(100)
+                .dx(circle.attr('cx') - Math.cos((angle + 90) * Math.PI / 180) * popout - circle.attr('r') * 2)
+                .dy(circle.attr('cy') - Math.sin((angle + 90) * Math.PI / 180) * popout - circle.attr('r') * 2)
+
+
+
+                text.animate(100)
+                .dx(circle.attr('cx') - Math.cos((angle + 90) * Math.PI / 180) * popout - circle.attr('r') * 2)
+                .dy(circle.attr('cy') - Math.sin((angle + 90) * Math.PI / 180) * popout - circle.attr('r') * 2)
+
+
+            })
+
+            arcList[i].on('mouseleave', function() {
+                arcList[i].animate(100)
+                .x(arcList[i].remember('originalX'))
+                .y(arcList[i].remember('originalY'))
+
+                text.animate(100)
+                .x(text.remember('originalX'))
+                .y(text.remember('originalY'))
+            })
+
+
+
+
+
+
 
             labelElements.push(text)
         }

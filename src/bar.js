@@ -48,7 +48,7 @@ export class BarChart {
         for(let i = 0; i < yAxisData.length; i++){
             heights.push(yAxisData[i])
         }
-        let yMin = Math.min(...heights) - (Math.min(...heights) % yStep )
+
         let yMax = Math.max(...heights) + (yStep - (Math.max(...heights) % yStep))
 
         let yMeasureStep = (yLine.attr('y1') - (yLine.attr('y2')  - (yLine.attr('y2') / Chart.precision))) / yMax;
@@ -80,13 +80,26 @@ export class BarChart {
         // get a list of all the heights
 
 
+        for(let i = 0; i <= yMax; i += (yStep / 4)) {
+            if(i == 0) continue;
+            let measureLine = draw.line(yLine.attr('x1') - 5, xLine.attr('y1') + yMeasureStep * i, yLine.attr('x1') + 5, xLine.attr('y2') + yMeasureStep * i)
+            .stroke({ width: 1, color: '#000' })
 
-        Chart.drawYAxisMeasureLines(yMin, yMax, yStep);
+            if(i % yStep == 0) {
+                measureLine.attr('x1', measureLine.attr('x1') - 1.5)
+                measureLine.attr('x2', measureLine.attr('x2') + 1.5)
+                let text = draw.text(i).font({ family: 'Helvetica', size: 10 })
+
+                text.x(measureLine.attr('x1') - text.bbox().width - 2)
+                .cy(xLine.attr('y1') + yMeasureStep * i)
+            }
+
+        }
 
         let barPositionStep = (yCenter.attr('x2') - yCenter.attr('x1')) / xAxisData.length
 
         for(let i = 0; i < xAxisData.length; i++){
-            drawBar(yAxisData[i], barPositionStep * i + 15, barPositionStep - 15, xAxisData[i])
+            drawBar(yAxisData[i], barPositionStep * i + 18, barPositionStep - 18, xAxisData[i])
         }
 
         var title = draw.text(function(add) {

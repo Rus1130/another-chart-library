@@ -17,64 +17,6 @@ export class Chart {
     static draw = null;
     static measureLines = []
     static precision = 10;
-    static drawYAxisMeasureLines(min, max, step){
-        let xLine = Chart.measureLines.xAxisLine;
-        let yLine = Chart.measureLines.yAxisLine;
-
-        let draw = Chart.options.draw;
-        let yMeasureStep = (yLine.attr('y1') - (yLine.attr('y2')  - (yLine.attr('y2') / Chart.precision))) / max;
-        let lines = []
-        for(let i = 0; i <= max; i += step) {
-            if(i == 0) continue;
-            let measureLine = draw.line(yLine.attr('x1') - 5, xLine.attr('y1') + yMeasureStep * i, yLine.attr('x1'), xLine.attr('y2') + yMeasureStep * i)
-            .stroke({ width: 1, color: '#000' })
-
-            let text = draw.text(i).font({ family: 'Helvetica', size: 10 })
-
-            text.x(measureLine.attr('x1') - text.bbox().width - 2)
-            .cy(xLine.attr('y1') + yMeasureStep * i)
-
-            lines.push(measureLine)
-        }
-
-        return lines;
-    }
-
-    static drawXAxisMeasureLines(min, max, step){
-        let xLine = Chart.measureLines.xAxisLine;
-        let yLine = Chart.measureLines.yAxisLine;
-        
-        let draw = Chart.options.draw;
-
-        let xMeasureStep = (xLine.attr('x2') - (yLine.attr('x1') / Chart.precision)) / (max - (min - 4));
-
-        let lines = []
-        let textLines = []
-        for(let i = min; i <= max; i += step) {
-            let measureLine = draw.line(yLine.attr('x1') + xMeasureStep, xLine.attr('y1'), yLine.attr('x1') + xMeasureStep, xLine.attr('y1') + 5)
-            .stroke({ width: 1, color: '#000' })
-
-            measureLine.x(measureLine.x() + xMeasureStep * (i - min) + (xMeasureStep))
-
-            lines.push(measureLine)
-
-            let text = draw.text(i).font({ family: 'Helvetica', size: 10 })
-            .cx(measureLine.x())
-            .y(measureLine.y() + 10)
-
-            // if the text is too long, rotate 45 degrees
-            if(text.bbox().width > xMeasureStep) {
-                text.dx(-5).rotate(-45)
-            }
-
-            textLines.push(text)
-        }
-
-        // lines[lines.length - 1].remove()
-        // textLines[textLines.length - 1].remove()
-        return lines;
-    }
-    
 
     static fullScreen = false;
     static width = 500;
@@ -98,8 +40,8 @@ export class Chart {
      */
     appendTo(element, options) {
         options = options || {};
-        options.width = options.width || 500;
-        options.height = options.height || 500;
+        options.width = options.width || 600;
+        options.height = options.height || 600;
 
         Chart.options = options;
 
@@ -151,7 +93,7 @@ export class Chart {
             let w = options.width;
             let p = Chart.precision;
 
-            let xAxisLine = this.draw.line(5, h - h / p, w - 50, h - h / p).stroke({ width: 1, color: '#000' });
+            let xAxisLine = this.draw.line(5, h - h / p, w, h - h / p).stroke({ width: 1, color: '#000' });
             let yAxisLine = this.draw.line(w / p, 0, w / p, h - 5).stroke({ width: 1, color: '#000' });
 
             let rect = this.draw.rect(xAxisLine.attr('x2') - yAxisLine.attr('x1'), xAxisLine.attr('y1'))
