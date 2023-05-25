@@ -6,7 +6,7 @@ import { LineChart } from './src/line.js';
 // CONTINUE
 /**
  * @class Chart
- * @classdesc Create different types of charts from the given data. You can currently create {@link BarChart|bar charts}, {@link LineChart|line charts}, and {@link PieChart|pie charts}.
+ * @classdesc Create different types of charts from the given data. You can currently create {@link Chart.BarChart|bar charts}, {@link Chart.LineChart|line charts}, and {@link Chart.PieChart|pie charts}.
  * @param {string} type type of chart
  * @example
  * let chart = new Chart('bar')
@@ -54,8 +54,8 @@ export class Chart {
             let w = options.width;
             let p = Chart.precision;
 
-            let xAxisLine = this.draw.line(5, h - h / p, w - 5, h - h / p).stroke({ width: 1, color: '#000' });
-            let yAxisLine = this.draw.line(w / p, 0, w / p, h - 5).stroke({ width: 1, color: '#000' });
+            let xAxisLine = this.draw.line(h / p, h - h / p, w - 50, h - h / p).stroke({ width: 1, color: '#000' });
+            let yAxisLine = this.draw.line(w / p, 50, w / p, h - h / p).stroke({ width: 1, color: '#000' });
 
             let rect = this.draw.rect(xAxisLine.attr('x2') - yAxisLine.attr('x1'), xAxisLine.attr('y1'))
             .move(yAxisLine.attr('x1'), yAxisLine.attr('y1')).fill('none')
@@ -93,8 +93,8 @@ export class Chart {
             let w = options.width;
             let p = Chart.precision;
 
-            let xAxisLine = this.draw.line(5, h - h / p, w, h - h / p).stroke({ width: 1, color: '#000' });
-            let yAxisLine = this.draw.line(w / p, 0, w / p, h - 5).stroke({ width: 1, color: '#000' });
+            let xAxisLine = this.draw.line(h / p, h - h / p, w - 100, h - h / p).stroke({ width: 1, color: '#000' });
+            let yAxisLine = this.draw.line(w / p, 50, w / p, h - h / p).stroke({ width: 1, color: '#000' });
 
             let rect = this.draw.rect(xAxisLine.attr('x2') - yAxisLine.attr('x1'), xAxisLine.attr('y1'))
             .move(yAxisLine.attr('x1'), yAxisLine.attr('y1')).fill('none')
@@ -129,7 +129,7 @@ export class Chart {
             let xAxisData = arguments[4];
             let yAxisData = arguments[5];
             let barColor = arguments[6];
-            new classes[this.type](chartTitle, xAxisLabel, yAxisLabel, yStep, xAxisData, yAxisData, Chart.options, barColor);
+            new classes[this.type](chartTitle, xAxisLabel, yAxisLabel, yStep, xAxisData, yAxisData, barColor);
         }
 
         if(this.type == 'pie') {
@@ -145,9 +145,8 @@ export class Chart {
             let xAxisLabel = arguments[1]
             let yAxisLabel = arguments[2]
             let yStep = arguments[3]
-            let xStep = arguments[4]
-            let data = arguments[5]
-            new classes[this.type](chartTitle, xAxisLabel, yAxisLabel, yStep, xStep, data, Chart.options)
+            let data = arguments[4]
+            new classes[this.type](chartTitle, xAxisLabel, yAxisLabel, yStep, data)
         }
 
     }

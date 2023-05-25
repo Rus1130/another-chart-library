@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: LineChart</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: LineChart</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="Chart.html">Chart</a>.</span>LineChart<span class="signature">(chartTitle, xAxisLabel, yAxisLabel, yStep, xStep, data)</span><span class="type-signature"></span></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    
+    <h4 class="name" id="LineChart"><span class="type-signature"></span>new LineChart<span class="signature">(chartTitle, xAxisLabel, yAxisLabel, yStep, xStep, data)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chartTitle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the title of the chart</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>xAxisLabel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the label for the x axis</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>yAxisLabel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the label for the y axis</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>yStep</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the step value for the y axis</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>xStep</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the step value for the x axis</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the data for the line chart</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_line.js.html">src/line.js</a>, <a href="src_line.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let line = new Chart('line')
+    .appendTo('#line-chart')
+    .setData("Average Stock Prices (2000 - 2022)", 'Year', 'Price', 2, 2, [
+        {
+            color: 'red',
+            label: 'Apple',
+            pointRadius: 3,
+            points: [
+                [2000, 0.6937],
+                [2001, 0.3068],
+                [2002, 0.2905],
+                [2003, 0.2814],
+                [2004, 0.5391],
+                [2005, 1.4167],
+                [2006, 2.1492],
+                [2007, 3.8933],
+                [2008, 4.3092],
+                [2009, 4.4560],
+                [2010, 7.8866],
+                [2011, 11.0480],
+                [2012, 17.5266],
+                [2013, 14.6700],
+                [2014, 20.5310],
+                [2015, 27.1667],
+                [2016, 24.1638],
+                [2017, 35.4349],
+                [2018, 45.1771],
+                [2019, 50.5541],
+                [2020, 93.6424],
+                [2021, 139.3947],
+                [2022, 153.9328],
+            ],
+        }
+    ])</code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chart.html">Chart</a></li><li><a href="Chart.BarChart.html">BarChart</a></li><li><a href="Chart.LineChart.html">LineChart</a></li><li><a href="Chart.PieChart.html">PieChart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu May 25 2023 15:22:27 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

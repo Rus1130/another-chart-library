@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/line.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/line.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Chart } from '../main.js';
+import { PathArray } from 'https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.esm.js';
+
+/*
+
+
+
+
+    data schema:
+    title, xAxisLabel, yAxisLabel, yStep, xStep, data
+    data format:
+    [
+        {
+            color: 'red',
+            label: 'line 1',
+            points: [
+                ...[x, y],
+            ]
+            smooth: false
+        },
+        {
+            label: 'line 2',
+            color: 'blue',
+            points: [
+                ...[x, y],
+            ]
+            smooth: true
+        }
+    ]
+*/
+
+/**
+ * @class LineChart
+ * @memberof Chart
+ * @param {string}            chartTitle the title of the chart
+ * @param {string}            xAxisLabel the label for the x axis
+ * @param {string}            yAxisLabel the label for the y axis
+ * @param {number}            yStep      the step value for the y axis
+ * @param {number}            xStep      the step value for the x axis
+ * @param {object[]}          data       the data for the line chart
+ * @example
+    let line = new Chart('line')
+    .appendTo('#line-chart')
+    .setData("Average Stock Prices (2000 - 2022)", 'Year', 'Price', 2, 2, [
+        {
+            color: 'red',
+            label: 'Apple',
+            pointRadius: 3,
+            points: [
+                [2000, 0.6937],
+                [2001, 0.3068],
+                [2002, 0.2905],
+                [2003, 0.2814],
+                [2004, 0.5391],
+                [2005, 1.4167],
+                [2006, 2.1492],
+                [2007, 3.8933],
+                [2008, 4.3092],
+                [2009, 4.4560],
+                [2010, 7.8866],
+                [2011, 11.0480],
+                [2012, 17.5266],
+                [2013, 14.6700],
+                [2014, 20.5310],
+                [2015, 27.1667],
+                [2016, 24.1638],
+                [2017, 35.4349],
+                [2018, 45.1771],
+                [2019, 50.5541],
+                [2020, 93.6424],
+                [2021, 139.3947],
+                [2022, 153.9328],
+            ],
+        }
+    ])
+ */
+    export class LineChart {
+        constructor(chartTitle, xAxisLabel, yAxisLabel, yStep, xStep, data, options){
+            let draw = Chart.options.draw
+            this.data = data;
+    
+            let xLine = Chart.measureLines.xAxisLine;
+            let yLine = Chart.measureLines.yAxisLine;
+    
+            let xCenter = Chart.measureLines.xCenterLine;
+            let yCenter = Chart.measureLines.yCenterLine;
+    
+            draw.text(xAxisLabel).font({ family: 'Helvetica', size: 16 })
+            .cx(xCenter.attr('x1'))
+            .cy(options.height - (options.height - xLine.attr('y1')) / 2 + 9)
+    
+            // Y Axis Label
+            draw.text(yAxisLabel).font({ family: 'Helvetica', size: 16 })
+            .cx(yLine.attr('x2') / 2 - yLine.attr('x1') / 4)
+            .cy(yCenter.attr('y1'))
+            .rotate(-90)
+    
+            let yData = []
+            let xData = []
+            for(let i = 0; i &lt; data.length; i++){
+                for(let j = 0; j &lt; data[i].points.length; j++){
+                    yData.push(data[i].points[j][1])
+                    xData.push(data[i].points[j][0])
+    
+                }
+            }
+    
+            let yMin = Math.max(...yData) + (yStep - (Math.max(...yData) % yStep))
+            let yMax = Math.min(...yData) - (yStep - (Math.min(...yData) % yStep))
+            
+            let xMin = Math.max(...xData) + (xStep - (Math.max(...xData) % xStep))
+            let xMax = Math.min(...xData) - (xStep - (Math.min(...xData) % xStep))
+
+    
+            var title = draw.text(function(add) {
+                add.tspan(chartTitle).fill('#8e8e8e')
+            })
+            .y(10)
+            .font({ family: 'Helvetica', size: options.height / 30  })
+    
+            title.cx(xCenter.attr('x1'))
+    
+            let xMeasureStep = (yLine.attr('y1') - yLine.attr('y2')) / xMax
+            let yMeasureStep = (yLine.attr('y1') - yLine.attr('y2')) / xMax
+        }
+    }</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chart.html">Chart</a></li><li><a href="Chart.BarChart.html">BarChart</a></li><li><a href="Chart.LineChart.html">LineChart</a></li><li><a href="Chart.PieChart.html">PieChart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu May 25 2023 15:22:27 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
