@@ -18,7 +18,8 @@ let line = new Chart('line')
         {
             color: 'red',
             label: 'Apple',
-            pointRadius: 3,
+            pointRadius: 1,
+            lineWidth: 2,
             points: [
                 [2000, 0.6937],
                 [2001, 0.3068],
@@ -47,7 +48,8 @@ let line = new Chart('line')
         }, {
             color: 'blue',
             label: 'Microsoft',
-            pointRadius: 3,
+            pointRadius: 2,
+            lineWidth: 1,
             points: [
                 [2000, 23.8554],
                 [2001, 19.5747],
@@ -190,21 +192,44 @@ let line = new Chart('line')
             textArray.pop()
             
 
-            function plot(x, y, color){
-                let point = draw.circle(5).fill(color)
+            function plot(x, y, color, r){
+                let point = draw.circle(r).fill(color)
                 point.cx(measureLineArray[0].attr('x1') + (xData.indexOf(x) * xMeasureStep))
                 let yPlot = (measureLineArray[0].attr('y1') + 6) + y * yMeasureStep
 
                 yPlot > xLine.attr('y1') ? yPlot = xLine.attr('y1') - 1 : yPlot = yPlot
 
                 point.cy(yPlot)
+                return point
             }
 
+            let points = []
             for(let i = 0; i < data.length; i++){
                 let line = data[i]
+                points.push([])
                 for(let j = 0; j < line.points.length; j++){
-                    plot(line.points[j][0], line.points[j][1], line.color)
+                    let point = plot(line.points[j][0], line.points[j][1], line.color, line.pointRadius)
+                    points[i].push(point)
                 }
+            }
+
+            let pathArray = []
+            for(let i = 0; i < points.length; i++){
+                let path = []
+                for(let j = 1; j < points[i].length; j++){
+                    path.push(["M", points[i][j - 1].attr('cx'), points[i][j - 1].attr('cy')])
+                    path.push(["L", points[i][j].attr('cx'), points[i][j].attr('cy')])
+                }
+                draw.path(new PathArray(path)).stroke({ width: data[i].lineWidth, color: data[i].color })
+
+                let colorDisplay = draw.rect(20, 20).fill(data[i].color)
+                .x(xLine.attr('x2') + 10)
+                .y(yLine.attr('y1') + 30 * i)
+                .radius(2)
+
+                let displayLabel = draw.text(data[i].label).font({ family: 'Helvetica', size: 12 })
+                .x(xLine.attr('x2') + 10 + colorDisplay.bbox().width + 5)
+                .y(yLine.attr('y1') + 30 * i + colorDisplay.bbox().height / 2 - 6)
             }
 
             // title
