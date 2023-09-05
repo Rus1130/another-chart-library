@@ -213,7 +213,6 @@ let line = new Chart('line')
                 }
             }
 
-            let pathArray = []
             for(let i = 0; i < points.length; i++){
                 let path = []
                 for(let j = 1; j < points[i].length; j++){
