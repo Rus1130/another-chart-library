@@ -204,16 +204,24 @@ let line = new Chart('line')
             }
 
             let points = []
+            let pointLabels = []
+            let hoverPoints = []
             for(let i = 0; i < data.length; i++){
                 let line = data[i]
                 points.push([])
                 for(let j = 0; j < line.points.length; j++){
                     let point = plot(line.points[j][0], line.points[j][1], line.color, line.pointRadius)
+                    let hoverPoint = draw.circle(line.pointRadius * 10).fill('transparent')
+                    hoverPoint.cx(point.attr('cx'))
+                    hoverPoint.cy(point.attr('cy'))
+
+                    pointLabels.push(line.points[j][1])
+                    hoverPoints.push(hoverPoint)
+
                     points[i].push(point)
                 }
             }
 
-            let pathArray = []
             for(let i = 0; i < points.length; i++){
                 let path = []
                 for(let j = 1; j < points[i].length; j++){
