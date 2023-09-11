@@ -79,7 +79,7 @@ let line = new Chart('line')
     ])
  */
     export class LineChart {
-        constructor(chartTitle, xAxisLabel, yAxisLabel, yStep, data){
+        constructor(chartTitle, xAxisLabel, yAxisLabel, yStep, xStep, data){
             let draw = Chart.options.draw
             this.data = data;
     
@@ -117,8 +117,8 @@ let line = new Chart('line')
             let yMeasureStep = (yLine.attr('y1') - yLine.attr('y2')) / (yMax - yMin)
             let yMeasureCount = 0;
 
-            let xMax = Math.max(...xData) + (1 - (Math.max(...xData) % 1))
-            let xMin = Math.min(...xData) - (1 - (Math.min(...xData) % 1))
+            let xMax = Math.max(...xData) + 1
+            let xMin = Math.floor(Math.min(...xData) - (xStep - (Math.min(...xData) % xStep)) + xStep)
             let xMeasureStep = (xLine.attr('x2') - xLine.attr('x1')) / (xMax - xMin)
             let xMeasureCount = 0;
 
@@ -155,7 +155,7 @@ let line = new Chart('line')
             let measureLineArray = []
             let textArray = []
 
-            for(let i = xMin; i <= xMax; i += 1 ) {
+            for(let i = xMin; i <= xMax; i += xStep ) {
                 if(i <= xMin) continue;
                 
                 let measureLine = draw.line(yLine.attr('x1') + xMeasureStep * (i - xMin), xLine.attr('y1'), yLine.attr('x1') + xMeasureStep * (i - xMin), xLine.attr('y1') + 5)

@@ -145,8 +145,9 @@ export class Chart {
             let xAxisLabel = arguments[1]
             let yAxisLabel = arguments[2]
             let yStep = arguments[3]
-            let data = arguments[4]
-            new classes[this.type](chartTitle, xAxisLabel, yAxisLabel, yStep, data)
+            let xStep = arguments[4]
+            let data = arguments[5]
+            new classes[this.type](chartTitle, xAxisLabel, yAxisLabel, yStep, xStep, data)
         }
 
     }
